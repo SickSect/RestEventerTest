@@ -20,14 +20,36 @@ public class TaskController {
         return repo.save(task);
     }
 
-    @GetMapping("{/tasks}")
+    @GetMapping("/tasks")
     public Iterable<Task> getAll(){
         return repo.findAll();
     }
 
-    @GetMapping("{/tasks/{id}")
+    @GetMapping("/tasks/{id}")
     public Task getById(@PathVariable Long id){
         return repo.findById(id).orElse(null);
+    }
+
+    @PutMapping("/tasks/{id}")
+    public Task update(@RequestBody Task task, @PathVariable Long id){
+        task.setId(id);
+        return repo.save(task);
+    }
+
+    @DeleteMapping("/tasks/{id}")
+    public void delete(@PathVariable Long id){
+        repo.deleteById(id);
+    }
+
+    @PatchMapping("/tasks/{id}")
+    public void patchMethod(@PathVariable Long id, @RequestBody Task task){
+        if (task.isDone())
+            repo.markAsDone(id);
+    }
+
+    @PatchMapping("/tasks/{id}:mark-as-done")
+    public void patchMethod(@PathVariable Long id){
+        repo.markAsDone(id);
     }
     
 }
